@@ -95,6 +95,7 @@ class Package:
         else:
             self.logger.log(f"未找到 {software_name} 的软件版本信息")
             print(f"未找到 {software_name} 的软件版本信息")
+
     def replace_files(self):
         # 获取当前脚本所在路径
         script_path = os.path.dirname(os.path.abspath(__file__))
@@ -107,6 +108,8 @@ class Package:
 
         # 检查目标路径是否存在
         if not os.path.exists(target_path):
+            self.logger.log(f"目标路径 {target_path} 不存在")
+            print(f"目标路径 {target_path} 不存在")
             raise FileNotFoundError(f"目标路径 {target_path} 不存在")
 
         # 检查每个文件是否存在并替换
@@ -116,11 +119,18 @@ class Package:
             print(f"source_file_path: {source_file_path}")
             # 检查文件是否存在
             if not os.path.isfile(source_file_path):
+                self.logger.log(f"源文件 {file_name} 不存在于{source_file_path}")
+                print(f"替换文件失败，源文件 {file_name} 不存在于{source_file_path}")
                 raise FileNotFoundError(f"源文件 {file_name} 不存在")
 
             # 替换文件
-            shutil.copy(source_file_path, target_file_path)
-            print(f"{file_name} 已成功替换到 {target_path}")
+            try:    
+                shutil.copy(source_file_path, target_file_path)
+                print(f"{file_name} 已成功替换到 {target_path}")
+                self.logger.log(f"{file_name} 已成功替换到 {target_path}")
+            except (shutil.Error, shutil.SameFileError, PermissionError) as e:
+                print(f"替换文件时出现错误: {e}")
+                self.logger.log(f"替换文件时出现错误: {e}")
 
     def check_replace_success(self):
         # 检查iSCSITarget
