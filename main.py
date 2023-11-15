@@ -10,8 +10,6 @@ def install_package(package):
     software_names = ["pacemaker", "corosync", "crmsh", "pacemaker-resource-agents", "resource-agents"]
     for software_name in software_names:
         package.install_package(software_name)
-
-    for software_name in software_names:
         package.check_versions(software_name)
 
 # 替换RA
