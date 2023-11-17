@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import os
 import re
+import sys
 import shutil
 from base import Base
 
@@ -35,7 +36,7 @@ class Package:
 
     def install_from_yaml(self):
         yaml_filename = "config.yaml"
-        yaml_path = os.path.join(os.path.dirname(__file__), yaml_filename)
+        yaml_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), yaml_filename)
         if not os.path.isfile(yaml_path):
             raise FileNotFoundError(f"未找到 {yaml_filename} 文件")
         return yaml_path
@@ -98,7 +99,7 @@ class Package:
 
     def replace_files(self):
         # 获取当前脚本所在路径
-        script_path = os.path.dirname(os.path.abspath(__file__))
+        script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
         
         # 定义目标路径
         target_path = "/usr/lib/ocf/resource.d/heartbeat"
