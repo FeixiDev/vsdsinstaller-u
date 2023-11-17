@@ -6,7 +6,7 @@ import sys
 import datetime
 
 # 获取当前脚本所在的目录
-current_directory = os.path.dirname(__file__)
+current_directory = os.path.dirname(os.path.realpath(sys.argv[0]))
 log_directory = os.path.join(current_directory, "logs")  # 日志文件夹路径
 
 if not os.path.exists(log_directory):
