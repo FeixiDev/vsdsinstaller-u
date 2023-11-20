@@ -145,9 +145,5 @@ class Package:
         self.logger.log(f"执行 {command_2} 的结果：{result_2.stdout}")
         if "iSCSITarget.mod_cache_gena_acl_0" not in result_1.stdout:
             print("iSCSITarget 替换失败")
-        else:
-            print("iSCSITarget 替换成功")
         if "iSCSILogicalUnit.450_patch1476_mod" not in result_2.stdout:
             print("iSCSILogicalUnit 替换失败")
-        else:
-            print("iSCSILogicalUnit 替换成功")
