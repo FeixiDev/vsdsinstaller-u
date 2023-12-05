@@ -32,15 +32,24 @@ class Package:
         result = self.base.com(command)
         self.logger.log(f"执行 {command} 的结果：{result.stdout}")
         # print(f"结果: {result.stdout} ")
+        if "not found" in result.stdout:
+            self.logger.log(f"{software}安装失败，版本: {version} 不存在")
+            print(f"{software}安装失败，版本: {version} 不存在")
+            sys.exit()
+        print(f"{software}安装成功")
         return result
 
     def install_from_yaml(self):
         yaml_filename = "config.yaml"
         yaml_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), yaml_filename)
-        if not os.path.isfile(yaml_path):
-            raise FileNotFoundError(f"未找到 {yaml_filename} 文件")
-        return yaml_path
-    
+        try:
+            if not os.path.isfile(yaml_path):
+                raise FileNotFoundError(f"未找到 {yaml_filename} 文件\n请检查配置文件是否在当前路径或者配置文件名称是否为config.yaml")
+            return yaml_path
+        except FileNotFoundError as e:
+            print(e)  
+            sys.exit()
+
     def install_package(self, software_name):
         if software_name in self.software_versions:
             version = self.software_versions[software_name]
@@ -56,7 +65,7 @@ class Package:
         result = self.base.com("")
         if software_name in ["pacemaker-resource-agents", "resource-agents"]:
             result = self.base.com(f"apt-cache policy {software_name} | grep Installed")
-            self.logger.log(f"{software_name} --version的执行结果：{result.stdout}")
+            self.logger.log(f"apt-cache policy {software_name} | grep Installed 的执行结果：{result.stdout}")
         elif software_name == "pacemaker":
             software_name = "pacemakerd"
             result = self.base.com(f"{software_name} --version")
