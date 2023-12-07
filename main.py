@@ -11,9 +11,11 @@ def install_package(package):
     for software_name in software_names:
         package.install_package(software_name)
         package.check_versions(software_name)
+        
 
 # 替换RA
 def replace_RA(package):
+    print("替换iSCSITarget和iSCSILogicalUnit")
     package.replace_files()
     package.check_replace_success()
 
@@ -31,9 +33,9 @@ def display_version():
     print("version: v1.0.0")
 
 def main():
-    parser = argparse.ArgumentParser(description='None')
+    parser = argparse.ArgumentParser(description='vsdsinstaller-u')
     parser.add_argument('-p', '--package', action='store_true',
-                        help='Pacemaker & Corosync & Crmsh')
+                        help='install pacemaker & corosync & crmsh')
     parser.add_argument('-r', '--RA', action='store_true',
                         help='replace RA')
     parser.add_argument('-n', '--nmcli', action='store_true',
