@@ -169,7 +169,7 @@ class Package:
 
                 # 修改文件权限为755（rwxr-xr-x）
                 os.chmod(target_file_path, 0o755)
-                print(f"权限已更改为 755: {target_file_path}")
+                # print(f"权限已更改为 755: {target_file_path}")
                 self.logger.log(f"权限已更改为 755: {target_file_path}")
             except (shutil.Error, shutil.SameFileError, PermissionError) as e:
                 print(f"替换文件时出现错误: {e}")
