@@ -41,7 +41,7 @@ def main():
     parser.add_argument('-n', '--nmcli', action='store_true',
                         help='install nmcli')
     parser.add_argument('-t', '--targetcli', action='store_true',
-                        help='install targetcli_')
+                        help='install targetcli')
     parser.add_argument('-v', '--version', action='store_true',
                         help='Show version information')
     args = parser.parse_args()
