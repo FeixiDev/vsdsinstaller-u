@@ -1,0 +1,10 @@
+packages:
+  pacemaker: 
+  corosync: 
+  crmsh: 
+  pacemaker-resource-agents: 
+  resource-agents: 
+nmcli:
+  nmcli:
+targetcli:
+  targetcli:
