@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
+import sys
 from log_record import Logger
 from package import Package
 
@@ -46,6 +47,10 @@ def main():
                         help='Show version information')
     args = parser.parse_args()
 
+    if args.version:
+        display_version()
+        sys.exit()
+        
     logger = Logger("vsdsinstaller-u")
     package = Package(logger)
     
@@ -57,8 +62,6 @@ def main():
     #     nmcli_(package)
     elif args.targetcli:
         targetcli_(package)
-    elif args.version:
-        display_version()
     else:
         install_package(package)
         replace_RA(package)
