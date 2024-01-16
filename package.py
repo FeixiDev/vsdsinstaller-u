@@ -202,5 +202,5 @@ class Package:
 
             if string_to_check not in result.stdout:
                 print(f"{target} 替换失败")
-        self.logger.space(f"")
+        self.logger.space()
         print("\n", end='')
