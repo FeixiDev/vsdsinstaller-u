@@ -11,7 +11,7 @@ def install_package(package):
     software_names = ["pacemaker", "corosync", "crmsh", "pacemaker-resource-agents", "resource-agents"]
     for software_name in software_names:
         package.install_package(software_name)
-        package.check_versions(software_name)
+        # package.check_versions(software_name)
         
 
 # 替换RA
@@ -28,7 +28,7 @@ def replace_RA(package):
 # targetcli安装
 def targetcli_(package):
     package.install_package("targetcli")
-    package.check_versions("targetcli")
+    # package.check_versions("targetcli")
 
 def display_version():
     print("version: v1.0.1")
