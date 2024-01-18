@@ -21,11 +21,14 @@ class Package:
         command = f"apt install {software}"
         if version is not None:
             command += f"={version}"
-            self.logger.log(f"安装 {software} 版本: {version}")
-            print(f"安装 {software} 版本: {version}")
-        else:
-            print(f"安装 {software} 默认版本")
-            self.logger.log(f"安装 {software} 的默认版本")
+
+        self.logger.log(f"安装 {software}")
+        print(f"安装 {software}")
+
+        # else:
+        #     print(f"安装 {software} 默认版本")
+        #     self.logger.log(f"安装 {software} 的默认版本")
+
         command += " -y"
 
         # print(f"command: {command} ")
@@ -33,10 +36,11 @@ class Package:
         self.logger.log(f"执行 {command} 的结果: {result.stdout}")
         # print(f"结果: {result.stdout} ")
         if "not found" in result.stdout:
-            self.logger.log(f"安装 {software} 失败，版本: {version} 不存在")
-            print(f"安装 {software} 失败，版本: {version} 不存在")
-            sys.exit()
-        print(f"安装 {software} 成功")
+            self.logger.log(f"安装失败")
+            print(f"安装失败\n")
+        else:
+            self.version_remain(software, version=None)
+
         return result
 
     def install_from_yaml(self):
@@ -76,43 +80,42 @@ class Package:
         elif software_name == "pacemaker":
             software_name_new = "pacemakerd"
             result = self.base.com(f"{software_name_new} --version")
-            self.logger.log(f"{software_name} --version的执行结果: {result.stdout}")
+            self.logger.log(f"{software_name_new} --version的执行结果: {result.stdout}")
             match_ = re.search(r'Pacemaker\s(.+)', str(result.stdout))
         elif software_name == "crmsh":
             software_name_new = "crm"
             result = self.base.com(f"{software_name_new} --version")
-            self.logger.log(f"{software_name} --version的执行结果: {result.stdout}")
+            self.logger.log(f"{software_name_new} --version的执行结果: {result.stdout}")
             match_ = re.search(r'crm\s(.+)', str(result.stdout))
         elif software_name == "corosync":
             result = self.base.com(f"{software_name} -v")
             self.logger.log(f"{software_name} -v的执行结果: {result.stdout}")
             match_ = re.search(r'version \'(.+?)\'', str(result.stdout)) # corosync 
-        else:
-            result = self.base.com(f"{software_name} --version")
-            self.logger.log(f"{software_name} --version的执行结果: {result.stdout}")
+        elif software_name == "targetcli-fb":
+            software_name_ = "targetcli"
+            result = self.base.com(f"{software_name_} --version")
+            self.logger.log(f"{software_name_} --version的执行结果: {result.stdout}")
             # if software_name == "nmcli":
             #     software_name = "network-manager"
             #     nmcli_match = re.search(r'version (.+)', str(result.stdout))
-            if software_name == "targetcli":
-                software_name = "targetcli-fb"
-                targetcli_match = re.search(r'version (.+)', str(result.stdout))
+            targetcli_match = re.search(r'version (.+)', str(result.stdout))
     
         if "No such file" in result.stdout or "not found" in result.stdout or "Warning" in result.stdout:
-            self.logger.log(f"{software_name} 未安装")
-            print(f"{software_name} 未安装")
+            self.logger.log(f"安装 {software_name} 失败")
+            print(f"安装失败")
         elif version != None:
-            print(f"安装 {software_name} 完成，版本: {version}\n")
+            print(f"安装完成，版本: {version}\n")
         else:
             if match_:
-                print(f"安装 {software_name} 完成，版本: {match_.group(1)}\n")
+                print(f"安装完成，版本: {match_.group(1)}\n")
             elif pacemaker_agents_match:
-                print(f"安装 {software_name} 完成，版本: {pacemaker_agents_match.group(1)}\n")
+                print(f"安装完成，版本: {pacemaker_agents_match.group(1)}\n")
             elif resource_agents_match:
-                print(f"安装 {software_name} 完成，版本: {resource_agents_match.group(1)}\n")
+                print(f"安装完成，版本: {resource_agents_match.group(1)}\n")
             # elif nmcli_match:
             #     print(f"安装 {software_name} 完成，版本: {nmcli_match.group(1)}\n")
             elif targetcli_match:
-                print(f"安装 {software_name} 完成，版本: {targetcli_match.group(1)}\n")
+                print(f"安装完成，版本: {targetcli_match.group(1)}\n")
             else:
                 self.logger.log(f"{software_name} 版本信息无法解析")
                 print(f"{software_name} 版本信息无法解析\n")
