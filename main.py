@@ -31,7 +31,7 @@ def targetcli_(package):
     # package.check_versions("targetcli")
 
 def display_version():
-    print("version: v1.0.1")
+    print("version: v1.0.2")
 
 def main():
     parser = argparse.ArgumentParser(description='vsdsinstaller-u')
