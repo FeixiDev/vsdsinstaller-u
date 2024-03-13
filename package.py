@@ -100,7 +100,7 @@ class Package:
             #     nmcli_match = re.search(r'version (.+)', str(result.stdout))
             targetcli_match = re.search(r'version (.+)', str(result.stdout))
     
-        if "No such file" in result.stdout or "not found" in result.stdout or "Warning" in result.stdout:
+        if "No such file" in result.stdout or "not found" in result.stdout:
             self.logger.log(f"安装 {software_name} 失败")
             print(f"安装失败")
         elif version != None:
