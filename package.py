@@ -178,7 +178,7 @@ class Package:
                     buffer_file_path = drbd_file_path
 
                 shutil.copy(source_file_path, buffer_file_path)
-                print(f"{file_name} 已成功替换到 {buffer_path}")
+                # print(f"{file_name} 已成功替换到 {buffer_path}")
                 self.logger.log(f"{file_name} 已成功替换到 {buffer_path}")
 
                 # 修改文件权限为755（rwxr-xr-x）
@@ -191,19 +191,35 @@ class Package:
         self.logger.space()
 
     def check_replace_success(self):
-        commands = {
-            "iSCSITarget": "iSCSITarget.mod_cache_gena_acl_0",
+        # 定义目标路径和 DRBD 路径
+        target_path = "/usr/lib/ocf/resource.d/heartbeat"
+        drbd_path = "/usr/lib/ocf/resource.d/linbit"
+
+        # 定义文件列表和替换字符串
+        files_to_replace = {
             "iSCSILogicalUnit": "iSCSILogicalUnit.450_patch1476_mod",
+            "iSCSITarget": "iSCSITarget.mod_cache_gena_acl_0",
             "portblock": "portblock.mod_iptablesversion",
             "drbd": "drbd.mod_notconfiged_retryonce"
         }
 
-        for target, string_to_check in commands.items():
-            command = f"grep -i '{string_to_check}' {target}"
-            result = self.base.com(command)
-            self.logger.log(f"执行 {command} 的结果: {result.stdout.strip()}")
+        # 检查每个文件是否被正确替换
+        for file_name, replace_string in files_to_replace.items():
+            # 确定要检查的路径
+            check_path = target_path if file_name != "drbd" else drbd_path
 
-            if string_to_check not in result.stdout:
-                print(f"{target} 替换失败")
+            # 构建 grep 命令
+            command = f"grep -i '{replace_string}' {check_path}/{file_name}"
+            
+            # 执行命令
+            result = self.base.com(command).stdout
+            self.logger.log(f"{command} 的执行结果: {result.strip()}")
+            
+            # 检查替换字符串是否存在于输出中，确定替换是否成功
+            if replace_string in result.stdout:
+                print(f"{file_name} 已成功替换到 {check_path}")
+            else:
+                print(f"{file_name} 替换失败")
+
         self.logger.space()
         print("\n", end='')
