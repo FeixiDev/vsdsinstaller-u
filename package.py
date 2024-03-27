@@ -212,8 +212,8 @@ class Package:
             command = f"grep -i '{replace_string}' {check_path}/{file_name}"
             
             # 执行命令
-            result = self.base.com(command).stdout
-            self.logger.log(f"{command} 的执行结果: {result.strip()}")
+            result = self.base.com(command)
+            self.logger.log(f"{command} 的执行结果: {result.stdout.strip()}")
             
             # 检查替换字符串是否存在于输出中，确定替换是否成功
             if replace_string in result.stdout:
